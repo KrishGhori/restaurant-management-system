@@ -1,12 +1,10 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { OrderContext } from "../../App";
+import { useEffect, useState } from "react";
 import api from "../../services/api";
 
 function CustomerProfile() {
-  const { orders } = useContext(OrderContext);
-
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [myOrders, setMyOrders] = useState([]);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -16,14 +14,19 @@ function CustomerProfile() {
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        const response = await api.getCurrentUser();
-        const currentUser = response.user;
+        const [profileResponse, ordersResponse] = await Promise.all([
+          api.getCurrentUser(),
+          api.getMyOrders(),
+        ]);
+
+        const currentUser = profileResponse.user;
         const resolvedName = [currentUser.firstName, currentUser.lastName]
           .filter(Boolean)
           .join(" ")
           .trim() || currentUser.username || "Customer";
 
         setUser(currentUser);
+        setMyOrders(ordersResponse.orders || []);
         setFullName(resolvedName);
         setEmail(currentUser.email || "");
         setPhone(currentUser.phone || "");
@@ -40,18 +43,6 @@ function CustomerProfile() {
 
   const username = user?.username || localStorage.getItem("username") || "Customer";
   const currentUserId = user?._id || localStorage.getItem("userId");
-
-  const myOrders = useMemo(
-    () =>
-      orders.filter((order) => {
-        if (order.customer === username) return true;
-        if (order.customerId?.username === username) return true;
-        if (order.customerId?._id === currentUserId) return true;
-        if (order.customerId === currentUserId) return true;
-        return false;
-      }),
-    [orders, username, currentUserId]
-  );
 
   const totalSpent = myOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
   const completedOrders = myOrders.filter(

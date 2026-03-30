@@ -1,12 +1,13 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Billing from '../models/Billing.js';
 import Order from '../models/Order.js';
 import { protectRoute, authorizeRole } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Create billing (Auto-generated when order is confirmed)
-router.post('/', protectRoute, async (req, res) => {
+// Create billing (Admin only)
+router.post('/', protectRoute, authorizeRole('admin'), async (req, res) => {
   const { orderId, paymentMethod, discount, deliveryCharges } = req.body;
 
   try {
@@ -26,6 +27,8 @@ router.post('/', protectRoute, async (req, res) => {
     const tax = Math.round(subtotal * 0.05); // 5% tax
     const totalAmount = subtotal + tax + (deliveryCharges || 0) - (discount || 0);
 
+    const isOrderPaid = order.paymentStatus === 'Paid';
+
     const billing = new Billing({
       orderId,
       customerId: order.customerId,
@@ -34,8 +37,9 @@ router.post('/', protectRoute, async (req, res) => {
       discount: discount || 0,
       deliveryCharges: deliveryCharges || 0,
       totalAmount,
-      paymentMethod: paymentMethod || 'Cash',
-      paymentStatus: 'Pending'
+      paymentMethod: paymentMethod || order.paymentMethod || 'Cash',
+      paymentStatus: isOrderPaid ? 'Paid' : 'Pending',
+      paymentDate: isOrderPaid ? new Date() : undefined
     });
 
     await billing.save();
@@ -105,29 +109,39 @@ router.patch('/:id/payment-status', protectRoute, authorizeRole('admin'), async 
     return res.status(400).json({ message: 'Invalid payment status' });
   }
 
+  const session = await mongoose.startSession();
+
   try {
-    const billing = await Billing.findByIdAndUpdate(
-      req.params.id,
-      {
-        paymentStatus,
-        transactionId: transactionId || undefined,
-        paymentDate: paymentStatus === 'Paid' ? new Date() : undefined
-      },
-      { new: true }
-    );
+    let billing;
+    await session.withTransaction(async () => {
+      billing = await Billing.findByIdAndUpdate(
+        req.params.id,
+        {
+          paymentStatus,
+          transactionId: transactionId || undefined,
+          paymentDate: paymentStatus === 'Paid' ? new Date() : undefined
+        },
+        { new: true, session }
+      );
+
+      if (!billing) {
+        return;
+      }
+
+      if (paymentStatus === 'Paid') {
+        await Order.findByIdAndUpdate(billing.orderId, { paymentStatus: 'Paid' }, { session });
+      }
+    });
 
     if (!billing) {
       return res.status(404).json({ message: 'Billing not found' });
     }
 
-    // Update order payment status if billing payment is successful
-    if (paymentStatus === 'Paid') {
-      await Order.findByIdAndUpdate(billing.orderId, { paymentStatus: 'Paid' });
-    }
-
     res.status(200).json({ message: 'Payment status updated', billing });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  } finally {
+    await session.endSession();
   }
 });
 

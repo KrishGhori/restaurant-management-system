@@ -6,8 +6,28 @@ import api from "../../services/api";
 function StaffDashboard() {
   const navigate = useNavigate();
   const { orders, setOrders, menuItems, setMenuItems } = useContext(OrderContext);
+  const currentUserId = localStorage.getItem("userId");
   const [staffStatus, setStaffStatus] = useState("Available");
   const [updatingStatus, setUpdatingStatus] = useState(false);
+
+  useEffect(() => {
+    const loadMyOrders = async () => {
+      try {
+        const response = await api.getOrders();
+        setOrders(response.orders || []);
+      } catch (error) {
+        console.error("Failed to load staff orders:", error);
+      }
+    };
+
+    loadMyOrders();
+
+    const intervalId = setInterval(() => {
+      loadMyOrders();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [setOrders]);
 
   useEffect(() => {
     const loadStaffStatus = async () => {
@@ -26,7 +46,8 @@ function StaffDashboard() {
 
   const updateStatus = (id) => {
     const updatedOrders = orders.map((order) => {
-      if (order.id === id) {
+      const currentId = order._id || order.id;
+      if (currentId === id) {
         if (order.status === "Pending") {
           return { ...order, status: "Preparing" };
         }
@@ -38,6 +59,15 @@ function StaffDashboard() {
     });
 
     setOrders(updatedOrders);
+  };
+
+  const isAssignedToCurrentStaff = (order) => {
+    const assignedId = typeof order.staffAssigned === "object"
+      ? order.staffAssigned?._id
+      : order.staffAssigned;
+
+    if (!currentUserId || !assignedId) return false;
+    return String(assignedId) === String(currentUserId);
   };
 
   const handleViewOrders = () => {
@@ -82,10 +112,11 @@ function StaffDashboard() {
     }
   };
 
-  const activeOrders = orders.filter((order) => order.status !== "Completed");
-  const pendingOrders = orders.filter((order) => order.status === "Pending");
-  const preparingOrders = orders.filter((order) => order.status === "Preparing");
-  const completedToday = orders.filter((order) => order.status === "Completed");
+  const myOrders = orders.filter(isAssignedToCurrentStaff);
+  const activeOrders = myOrders.filter((order) => !["Completed", "Delivered", "Cancelled"].includes(order.status));
+  const pendingOrders = myOrders.filter((order) => order.status === "Pending");
+  const preparingOrders = myOrders.filter((order) => order.status === "Preparing");
+  const completedToday = myOrders.filter((order) => order.status === "Completed" || order.status === "Delivered");
 
   const myPerformance = {
     ordersHandled: completedToday.length,
@@ -274,14 +305,14 @@ function StaffDashboard() {
           {activeOrders.length > 0 ? (
             <div className="space-y-4">
               {activeOrders.slice(0, 5).map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div key={order._id || order.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center space-x-4">
                     <div className={`w-3 h-3 rounded-full ${
                       order.status === 'Pending' ? 'bg-red-400' :
                       order.status === 'Preparing' ? 'bg-yellow-400' : 'bg-green-400'
                     }`}></div>
                     <div>
-                      <p className="font-medium text-gray-900">Order #{order.id}</p>
+                      <p className="font-medium text-gray-900">Order #{order.orderNumber || order._id || order.id}</p>
                       <p className="text-sm text-gray-600">{order.customer} • Table {order.table}</p>
                     </div>
                   </div>
@@ -294,7 +325,7 @@ function StaffDashboard() {
                       {order.status}
                     </span>
                     <button
-                      onClick={() => updateStatus(order.id)}
+                      onClick={() => updateStatus(order._id || order.id)}
                       className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
                     >
                       Update

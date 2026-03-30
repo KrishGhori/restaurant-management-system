@@ -1,6 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import Order from '../models/Order.js';
+import Billing from '../models/Billing.js';
+import MenuItem from '../models/MenuItem.js';
 import User from '../models/User.js';
 import { protectRoute, authorizeRole } from '../middleware/auth.js';
 
@@ -15,15 +17,13 @@ router.post('/', protectRoute, async (req, res) => {
   }
 
   try {
-    const normalizedItems = items.map((item) => ({
+    const normalizedItemsInput = items.map((item) => ({
       menuItemId: item.menuItemId || item._id || item.id,
-      name: item.name,
-      price: Number(item.price) || 0,
       quantity: Number(item.quantity) || 1,
       specialInstructions: item.specialInstructions || ''
     }));
 
-    const hasInvalidMenuItemId = normalizedItems.some(
+    const hasInvalidMenuItemId = normalizedItemsInput.some(
       (item) => !mongoose.Types.ObjectId.isValid(item.menuItemId)
     );
 
@@ -31,8 +31,37 @@ router.post('/', protectRoute, async (req, res) => {
       return res.status(400).json({ message: 'Each order item must contain a valid menu item ID' });
     }
 
+    const invalidQuantity = normalizedItemsInput.some((item) => !Number.isFinite(item.quantity) || item.quantity < 1);
+    if (invalidQuantity) {
+      return res.status(400).json({ message: 'Each order item must have quantity of at least 1' });
+    }
+
+    const menuItemIds = normalizedItemsInput.map((item) => new mongoose.Types.ObjectId(item.menuItemId));
+    const menuItems = await MenuItem.find({ _id: { $in: menuItemIds }, isAvailable: true })
+      .select('_id name price');
+
+    if (menuItems.length !== menuItemIds.length) {
+      return res.status(400).json({ message: 'One or more menu items are invalid or unavailable' });
+    }
+
+    const menuItemById = new Map(menuItems.map((menuItem) => [String(menuItem._id), menuItem]));
+    const normalizedItems = normalizedItemsInput.map((item) => {
+      const menuItem = menuItemById.get(String(item.menuItemId));
+      return {
+        menuItemId: menuItem._id,
+        name: menuItem.name,
+        price: Number(menuItem.price) || 0,
+        quantity: item.quantity,
+        specialInstructions: item.specialInstructions
+      };
+    });
+
+    const discountValue = Number(discount) || 0;
+    const safeDiscount = discountValue > 0 ? discountValue : 0;
+
     // Calculate total amount
-    const totalAmount = normalizedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0) - (discount || 0);
+    const subtotal = normalizedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalAmount = Math.max(0, subtotal - safeDiscount);
 
     const order = new Order({
       customerId: req.userId,
@@ -43,7 +72,7 @@ router.post('/', protectRoute, async (req, res) => {
       deliveryAddress,
       paymentMethod: paymentMethod || 'Cash',
       notes,
-      discount: discount || 0
+      discount: safeDiscount
     });
 
     await order.save();
@@ -82,7 +111,10 @@ router.get('/', protectRoute, authorizeRole('admin', 'staff'), async (req, res) 
     let filter = {};
 
     if (req.role === 'staff') {
-      filter.staffAssigned = req.userId;
+      if (!mongoose.Types.ObjectId.isValid(req.userId)) {
+        return res.status(200).json({ orders: [] });
+      }
+      filter.staffAssigned = new mongoose.Types.ObjectId(req.userId);
     }
 
     if (status) filter.status = status;
@@ -111,11 +143,18 @@ router.get('/stats/daily', protectRoute, authorizeRole('admin', 'staff'), async 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    const matchStage = {
+      createdAt: { $gte: today }
+    };
+
+    // Staff can only view their assigned orders in stats.
+    if (req.role === 'staff') {
+      matchStage.staffAssigned = new mongoose.Types.ObjectId(req.userId);
+    }
+
     const stats = await Order.aggregate([
       {
-        $match: {
-          createdAt: { $gte: today }
-        }
+        $match: matchStage
       },
       {
         $group: {
@@ -144,7 +183,11 @@ router.get('/:id', protectRoute, async (req, res) => {
     }
 
     // Check permission
-    if (String(order.customerId._id) !== req.userId && !['admin', 'staff'].includes(req.role)) {
+    if (req.role === 'staff') {
+      if (!order.staffAssigned || String(order.staffAssigned) !== req.userId) {
+        return res.status(403).json({ message: 'Access denied' });
+      }
+    } else if (String(order.customerId._id) !== req.userId && req.role !== 'admin') {
       return res.status(403).json({ message: 'Access denied' });
     }
 
@@ -247,12 +290,33 @@ router.patch('/:id/payment-status', protectRoute, authorizeRole('admin'), async 
     return res.status(400).json({ message: 'Invalid payment status' });
   }
 
+  const session = await mongoose.startSession();
+
   try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { paymentStatus },
-      { new: true }
-    );
+    let order;
+    await session.withTransaction(async () => {
+      order = await Order.findByIdAndUpdate(
+        req.params.id,
+        { paymentStatus },
+        { new: true, session }
+      );
+
+      if (!order) {
+        return;
+      }
+
+      const billingUpdate = {
+        paymentStatus,
+        paymentMethod: order.paymentMethod || 'Cash',
+        paymentDate: paymentStatus === 'Paid' ? new Date() : undefined
+      };
+
+      await Billing.findOneAndUpdate(
+        { orderId: order._id },
+        billingUpdate,
+        { session }
+      );
+    });
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
@@ -261,37 +325,88 @@ router.patch('/:id/payment-status', protectRoute, authorizeRole('admin'), async 
     res.status(200).json({ message: 'Payment status updated', order });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  } finally {
+    await session.endSession();
   }
 });
 
 // Customer online payment (Delivered orders only)
 router.patch('/:id/pay-online', protectRoute, async (req, res) => {
+  const session = await mongoose.startSession();
+
   try {
-    const order = await Order.findById(req.params.id);
+    let order;
+
+    // Atomic update prevents double payment success from rapid repeated requests.
+    await session.withTransaction(async () => {
+      order = await Order.findOneAndUpdate(
+        {
+          _id: req.params.id,
+          customerId: req.userId,
+          status: 'Delivered',
+          paymentStatus: { $ne: 'Paid' }
+        },
+        {
+          paymentMethod: 'UPI',
+          paymentStatus: 'Paid'
+        },
+        { new: true, session }
+      );
+
+      if (!order) {
+        return;
+      }
+
+      await Billing.findOneAndUpdate(
+        { orderId: order._id },
+        {
+          $set: {
+            paymentStatus: 'Paid',
+            paymentMethod: 'UPI',
+            paymentDate: new Date(),
+            transactionId: `UPI-${Date.now()}-${String(order._id).slice(-6)}`,
+            totalAmount: order.totalAmount,
+            discount: order.discount || 0
+          },
+          $setOnInsert: {
+            orderId: order._id,
+            customerId: order.customerId,
+            subtotal: order.totalAmount,
+            tax: 0,
+            deliveryCharges: 0
+          }
+        },
+        { new: true, upsert: true, session, setDefaultsOnInsert: true }
+      );
+    });
 
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
+      const existingOrder = await Order.findById(req.params.id);
 
-    if (String(order.customerId) !== req.userId) {
-      return res.status(403).json({ message: 'Access denied' });
-    }
+      if (!existingOrder) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
 
-    if (order.status !== 'Delivered') {
-      return res.status(400).json({ message: 'Online payment is available only after delivery' });
-    }
+      if (String(existingOrder.customerId) !== req.userId) {
+        return res.status(403).json({ message: 'Access denied' });
+      }
 
-    if (order.paymentStatus === 'Paid') {
-      return res.status(400).json({ message: 'Order is already paid' });
-    }
+      if (existingOrder.status !== 'Delivered') {
+        return res.status(400).json({ message: 'Online payment is available only after delivery' });
+      }
 
-    order.paymentMethod = 'UPI';
-    order.paymentStatus = 'Paid';
-    await order.save();
+      if (existingOrder.paymentStatus === 'Paid') {
+        return res.status(400).json({ message: 'Order is already paid' });
+      }
+
+      return res.status(400).json({ message: 'Unable to process payment for this order' });
+    }
 
     res.status(200).json({ message: 'Payment completed successfully', order });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  } finally {
+    await session.endSession();
   }
 });
 

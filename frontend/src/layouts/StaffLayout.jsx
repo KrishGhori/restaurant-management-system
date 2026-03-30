@@ -43,7 +43,7 @@ function StaffLayout() {
                 </svg>
               </button>
               <div className="flex items-center ml-4 md:ml-0">
-                <div className="h-8 w-8 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center">
+                <div className="h-8 w-8 bg-linear-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">👨‍🍳</span>
                 </div>
                 <div className="ml-3">
@@ -119,7 +119,7 @@ function StaffLayout() {
             {/* Footer */}
             <div className="p-4 border-t border-gray-200">
               <div className="flex items-center">
-                <div className="h-8 w-8 bg-gradient-to-r from-green-400 to-teal-500 rounded-full flex items-center justify-center">
+                <div className="h-8 w-8 bg-linear-to-r from-green-400 to-teal-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-xs font-bold">✓</span>
                 </div>
                 <div className="ml-3">

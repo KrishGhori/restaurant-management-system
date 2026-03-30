@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import api from "../../services/api";
 
 function StaffOrders() {
+  const currentUserId = localStorage.getItem("userId");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingOrderId, setUpdatingOrderId] = useState(null);
@@ -31,9 +32,17 @@ function StaffOrders() {
   const assignedOrders = useMemo(
     () =>
       orders
+        .filter((order) => {
+          const assignedId = typeof order.staffAssigned === "object"
+            ? order.staffAssigned?._id
+            : order.staffAssigned;
+
+          if (!currentUserId || !assignedId) return false;
+          return String(assignedId) === String(currentUserId);
+        })
         .filter((order) => !["Delivered", "Cancelled"].includes(order.status))
         .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)),
-    [orders]
+    [orders, currentUserId]
   );
 
   const updateOrderStatus = async (orderId, status) => {

@@ -8,6 +8,14 @@ function CustomerOrders() {
   const currentUserId = localStorage.getItem("userId");
   const [payingOrderId, setPayingOrderId] = useState(null);
   const [cancellingOrderId, setCancellingOrderId] = useState(null);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+    window.setTimeout(() => {
+      setToast(null);
+    }, 2500);
+  };
 
   useEffect(() => {
     const loadMyOrders = async () => {
@@ -85,8 +93,10 @@ function CustomerOrders() {
           return currentOrder;
         })
       );
+
+      showToast("Payment successful", "success");
     } catch (error) {
-      alert(error.message || "Failed to complete payment");
+      showToast(error.message || "Failed to complete payment", "error");
     } finally {
       setPayingOrderId(null);
     }
@@ -98,7 +108,7 @@ function CustomerOrders() {
 
     const canCancel = ["Pending", "Confirmed", "Preparing"].includes(order.status);
     if (!canCancel) {
-      alert("This order can no longer be cancelled");
+      showToast("This order can no longer be cancelled", "error");
       return;
     }
 
@@ -120,7 +130,7 @@ function CustomerOrders() {
         })
       );
     } catch (error) {
-      alert(error.message || "Failed to cancel order");
+      showToast(error.message || "Failed to cancel order", "error");
     } finally {
       setCancellingOrderId(null);
     }
@@ -128,6 +138,20 @@ function CustomerOrders() {
 
   return (
     <div className="space-y-6">
+      {toast && (
+        <div className="fixed top-4 right-4 z-50">
+          <div
+            className={`rounded-md px-4 py-3 text-sm font-medium shadow-lg ${
+              toast.type === "error"
+                ? "bg-red-100 text-red-800 border border-red-200"
+                : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+            }`}
+          >
+            {toast.message}
+          </div>
+        </div>
+      )}
+
       <div>
         <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
         <p className="text-gray-600 mt-1">Track your order history and status</p>

@@ -150,6 +150,10 @@ router.post('/:id/change-password', protectRoute, async (req, res) => {
 
     const user = await User.findById(req.params.id).select('+password');
 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     const isPasswordCorrect = await user.matchPassword(currentPassword);
 
     if (!isPasswordCorrect) {
