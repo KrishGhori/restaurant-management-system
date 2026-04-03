@@ -1,9 +1,8 @@
-const API_BASE_URL = "https://restaurant-management-system-xi-nine.vercel.app/api"
-const dummy =   import.meta.env.VITE_API_BASE_URL ||  'http://localhost:5000/api';
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api').trim();
 
 class ApiService {
   constructor() {
-    this.baseURL = API_BASE_URL;
+    this.baseURL = API_BASE_URL.replace(/\/+$/, '');
   }
 
   async request(endpoint, options = {}) {
@@ -34,6 +33,10 @@ class ApiService {
       return data ?? { success: true };
     } catch (error) {
       console.error('API Error:', error);
+      if (error instanceof TypeError) {
+        throw new Error(`Network error: unable to reach API at ${url}. Check backend server, API base URL, and CORS.`);
+      }
+
       throw error;
     }
   }
