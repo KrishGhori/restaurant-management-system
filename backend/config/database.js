@@ -4,28 +4,16 @@ export const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGODB_URI;
 
-      if (!mongoURI) {
-        throw new Error('MONGODB_URI is not set in environment variables');
-      }
-
-      const redactedUri = mongoURI.replace(/:\/\/([^:]+):([^@]+)@/, '://$1:***@');
-      console.log('Using MongoDB URI:', redactedUri);
+    console.log("🔥 USING DB:", mongoURI); // IMPORTANT
 
     await mongoose.connect(mongoURI, {
-        dbName: 'restaurant-management',
-        serverSelectionTimeoutMS: 10000
-    });
+  dbName: "restaurant-management"
+});
 
-      console.log('MongoDB connected successfully');
+    console.log("✅ MongoDB connected successfully");
   } catch (error) {
-      console.error('MongoDB connection failed:', error.message);
-
-      const atlasHint =
-        'If you are using MongoDB Atlas, whitelist your current IP in Atlas Network Access or allow 0.0.0.0/0 for development.';
-      console.error(atlasHint);
-
-      throw error;
+    console.error("❌ MongoDB connection failed:", error.message);
+    process.exit(1);
   }
 };
-
 export default connectDB;
