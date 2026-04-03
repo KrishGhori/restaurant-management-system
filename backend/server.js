@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
 import 'express-async-errors';
 import { connectDB } from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
@@ -28,7 +29,25 @@ app.use(express.urlencoded({ extended: true }));
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'Server is running' });
+  res.status(200).json({
+    status: 'Server is running',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  });
+});
+
+// Keep API reachable when DB is down and return explicit 503 for DB-dependent routes.
+app.use('/api', (req, res, next) => {
+  if (req.path === '/health') {
+    return next();
+  }
+
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      message: 'Database not connected. Please retry in a few seconds.'
+    });
+  }
+
+  next();
 });
 
 // Routes
@@ -48,14 +67,37 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
+const wait = (ms) => new Promise((resolve) => {
+  setTimeout(resolve, ms);
+});
+
+const connectWithRetry = async (maxAttempts = 5, delayMs = 5000) => {
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      await connectDB();
+      return;
+    } catch (error) {
+      console.error(`MongoDB connection attempt ${attempt}/${maxAttempts} failed:`, error.message);
+
+      if (attempt === maxAttempts) {
+        throw error;
+      }
+
+      console.log(`Retrying MongoDB connection in ${Math.floor(delayMs / 1000)} seconds...`);
+      await wait(delayMs);
+    }
+  }
+};
+
 const startServer = async () => {
   try {
-    await connectDB();
+    await connectWithRetry();
+
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.error('Server startup aborted due to database connection failure.');
+    console.error('Server startup aborted. Database connection could not be established.');
     process.exit(1);
   }
 };
