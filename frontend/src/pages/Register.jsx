@@ -103,7 +103,7 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4 relative overflow-hidden">
 
       {/* Background Shapes */}
       <div className="absolute inset-0 opacity-5">
@@ -113,15 +113,15 @@ function Register() {
         <div className="absolute bottom-20 right-20 w-16 h-16 bg-orange-500 rounded-full"></div>
       </div>
 
-      <div className="max-w-md w-full space-y-8 relative z-10">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8 relative z-10">
 
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-20 w-20 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+          <div className="mx-auto h-20 w-20 bg-linear-to-r from-orange-500 via-red-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
             <span className="text-3xl">🍽️</span>
           </div>
 
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             Restaurant<span className="text-orange-600">Pro</span>
           </h1>
 
@@ -131,7 +131,7 @@ function Register() {
         </div>
 
         {/* Register Card */}
-        <div className="card-shadow p-8">
+        <div className="card-shadow p-5 sm:p-8">
           <form onSubmit={handleRegister} className="space-y-6">
 
             {/* Success Message */}
@@ -154,11 +154,11 @@ function Register() {
                 Select Your Role
               </label>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, role: "admin" }))}
-                  className={`p-4 border-2 rounded-xl transition ${
+                  className={`p-3 sm:p-4 border-2 rounded-xl transition ${
                     formData.role === "admin"
                       ? "border-orange-500 bg-orange-50 text-orange-700"
                       : "border-gray-200 text-gray-600"
@@ -171,7 +171,7 @@ function Register() {
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, role: "staff" }))}
-                  className={`p-4 border-2 rounded-xl transition ${
+                  className={`p-3 sm:p-4 border-2 rounded-xl transition ${
                     formData.role === "staff"
                       ? "border-orange-500 bg-orange-50 text-orange-700"
                       : "border-gray-200 text-gray-600"
@@ -184,7 +184,7 @@ function Register() {
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, role: "customer" }))}
-                  className={`p-4 border-2 rounded-xl transition ${
+                  className={`p-3 sm:p-4 border-2 rounded-xl transition ${
                     formData.role === "customer"
                       ? "border-orange-500 bg-orange-50 text-orange-700"
                       : "border-gray-200 text-gray-600"
@@ -197,7 +197,7 @@ function Register() {
             </div>
 
             {/* Name Fields */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
                   First Name *
@@ -343,7 +343,7 @@ function Register() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="w-full bg-linear-to-r from-orange-500 to-red-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">

@@ -65,7 +65,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4 relative overflow-hidden">
 
       {/* Background Shapes */}
       <div className="absolute inset-0 opacity-5">
@@ -75,15 +75,15 @@ function Login() {
         <div className="absolute bottom-20 right-20 w-16 h-16 bg-orange-500 rounded-full"></div>
       </div>
 
-      <div className="max-w-md w-full space-y-8 relative z-10">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8 relative z-10">
 
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-20 w-20 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+          <div className="mx-auto h-20 w-20 bg-linear-to-r from-orange-500 via-red-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
             <span className="text-3xl">🍽️</span>
           </div>
 
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             Restaurant<span className="text-orange-600">Pro</span>
           </h1>
 
@@ -93,7 +93,7 @@ function Login() {
         </div>
 
         {/* Login Card */}
-        <div className="card-shadow p-8">
+        <div className="card-shadow p-5 sm:p-8">
           <form onSubmit={handleLogin} className="space-y-6">
 
             {/* Role Selection */}
@@ -102,12 +102,12 @@ function Login() {
                 Select Your Role
               </label>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
                 <button
                   type="button"
                   onClick={() => setRole("admin")}
-                  className={`p-4 border-2 rounded-xl transition ${
+                  className={`p-3 sm:p-4 border-2 rounded-xl transition ${
                     role === "admin"
                       ? "border-orange-500 bg-orange-50 text-orange-700"
                       : "border-gray-200 text-gray-600"
@@ -120,7 +120,7 @@ function Login() {
                 <button
                   type="button"
                   onClick={() => setRole("staff")}
-                  className={`p-4 border-2 rounded-xl transition ${
+                  className={`p-3 sm:p-4 border-2 rounded-xl transition ${
                     role === "staff"
                       ? "border-orange-500 bg-orange-50 text-orange-700"
                       : "border-gray-200 text-gray-600"
@@ -133,7 +133,7 @@ function Login() {
                 <button
                   type="button"
                   onClick={() => setRole("customer")}
-                  className={`p-4 border-2 rounded-xl transition ${
+                  className={`p-3 sm:p-4 border-2 rounded-xl transition ${
                     role === "customer"
                       ? "border-orange-500 bg-orange-50 text-orange-700"
                       : "border-gray-200 text-gray-600"

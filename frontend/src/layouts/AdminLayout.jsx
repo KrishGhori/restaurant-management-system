@@ -43,12 +43,12 @@ function AdminLayout() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
-              <div className="flex items-center ml-4 md:ml-0">
-                <div className="h-8 w-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
+              <div className="flex items-center ml-2 sm:ml-4 md:ml-0 min-w-0">
+                <div className="h-8 w-8 bg-linear-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">RP</span>
                 </div>
-                <div className="ml-3">
-                  <h1 className="text-xl font-bold text-gray-900">RestaurantPro</h1>
+                <div className="ml-2 sm:ml-3 min-w-0">
+                  <h1 className="text-base sm:text-xl font-bold text-gray-900 truncate">RestaurantPro</h1>
                   <p className="text-xs text-gray-500">Admin Panel</p>
                 </div>
               </div>
@@ -68,12 +68,12 @@ function AdminLayout() {
               </div>
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors"
+                className="inline-flex items-center px-2 sm:px-3 py-2 border border-gray-300 shadow-sm text-xs sm:text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors"
               >
-                <svg className="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="sm:mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
-                Logout
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
           </div>
@@ -120,7 +120,7 @@ function AdminLayout() {
             {/* Footer */}
             <div className="p-4 border-t border-gray-200">
               <div className="flex items-center">
-                <div className="h-8 w-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+                <div className="h-8 w-8 bg-linear-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-xs font-bold">✓</span>
                 </div>
                 <div className="ml-3">
@@ -142,7 +142,7 @@ function AdminLayout() {
 
         {/* Main Content */}
         <main className="flex-1 md:ml-0">
-          <div className="p-6">
+          <div className="p-3 sm:p-4 lg:p-6">
             <Outlet />
           </div>
         </main>

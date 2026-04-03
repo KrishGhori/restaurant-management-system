@@ -239,7 +239,7 @@ function Orders() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Orders Management</h1>
           <p className="mt-1 text-sm text-gray-500">
@@ -247,7 +247,7 @@ function Orders() {
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <div className="text-right">
+          <div className="text-left sm:text-right">
             <p className="text-sm text-gray-500">Total Orders</p>
             <p className="text-lg font-bold text-gray-900">{orders.length}</p>
           </div>
@@ -280,7 +280,7 @@ function Orders() {
           </div>
 
           {/* Search */}
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -291,7 +291,7 @@ function Orders() {
               placeholder="Search orders..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="input-field pl-10 w-64"
+              className="input-field pl-10 w-full sm:w-64"
             />
           </div>
         </div>

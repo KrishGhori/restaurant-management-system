@@ -158,7 +158,7 @@ function CustomerOrders() {
       </div>
 
       {myOrders.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-12 text-center">
           <div className="text-6xl mb-4">Orders</div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">No orders yet</h3>
           <p className="text-gray-600">
@@ -172,8 +172,8 @@ function CustomerOrders() {
               key={order._id || order.id}
               className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
             >
-              <div className="px-6 py-4 border-b border-gray-200">
-                <div className="flex justify-between items-center">
+              <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">
                       Order #{order.orderNumber || order._id?.slice(-8) || order.id}
@@ -182,7 +182,7 @@ function CustomerOrders() {
                       {formatDate(order.createdAt || order.timestamp)}
                     </p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-left sm:text-right">
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
                         order.status
@@ -197,10 +197,10 @@ function CustomerOrders() {
                 </div>
               </div>
 
-              <div className="px-6 py-4">
+              <div className="px-4 sm:px-6 py-4">
                 <div className="space-y-3">
                   {(order.items || []).map((item, index) => (
-                    <div key={index} className="flex justify-between items-center">
+                    <div key={index} className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-center">
                       <div className="flex items-center space-x-3">
                         <div>
                           <p className="font-medium text-gray-900">{item.name}</p>
@@ -220,8 +220,8 @@ function CustomerOrders() {
                 </div>
               </div>
 
-              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <div className="flex justify-between items-center gap-3">
+              <div className="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200">
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
                   <div className="text-sm text-gray-600">
                     Total Items: {(order.items || []).reduce((sum, item) => sum + (item.quantity || 0), 0)}
                     {order.orderType ? ` | ${order.orderType}` : ""}
@@ -264,7 +264,7 @@ function CustomerOrders() {
                         <img
                           src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(`PAYMENT|merchant=RestaurantPro|amount=${Number(order.totalAmount || 0).toFixed(2)}|currency=USD|method=UPI|order=${order.orderNumber || order._id || order.id}`)}`}
                           alt={`Payment QR for order ${order.orderNumber || order._id || order.id}`}
-                          className="h-24 w-24 rounded-md border border-gray-300 bg-white p-1"
+                          className="h-20 w-20 sm:h-24 sm:w-24 rounded-md border border-gray-300 bg-white p-1"
                         />
                         <div>
                           <p className="text-sm text-gray-600">Payable Amount</p>

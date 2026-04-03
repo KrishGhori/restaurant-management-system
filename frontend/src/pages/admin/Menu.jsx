@@ -163,7 +163,7 @@ function Menu() {
 
 
   return (
-    <div>
+    <div className="space-y-4">
       <h1>Menu Management</h1>
 
       {menuError && (
@@ -179,8 +179,9 @@ function Menu() {
     marginTop: "20px",
     marginBottom: "20px",
     display: "flex",
+    flexWrap: "wrap",
     gap: "15px",
-    alignItems: "center",
+    alignItems: "stretch",
   }}
 >
   <input
@@ -237,7 +238,7 @@ function Menu() {
     style={inputStyle}
   />
 
-  <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+  <label style={{ display: "flex", alignItems: "center", gap: "8px", minHeight: "42px" }}>
     <input
       type="checkbox"
       checked={newItem.isAvailable}
@@ -254,9 +255,11 @@ function Menu() {
 </div>
 
 
+      <div style={{ overflowX: "auto" }}>
       <table
         style={{
           width: "100%",
+          minWidth: "920px",
           marginTop: "20px",
           borderCollapse: "collapse",
         }}
@@ -400,6 +403,7 @@ function Menu() {
 
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
@@ -431,6 +435,8 @@ const cellStyle = {
 };
 
 const inputStyle = {
+  flex: "1 1 180px",
+  minWidth: "160px",
   padding: "8px 12px",
   borderRadius: "4px",
   border: "1px solid #ccc",

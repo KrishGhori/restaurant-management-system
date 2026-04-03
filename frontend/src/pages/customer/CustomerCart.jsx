@@ -117,7 +117,7 @@ function CustomerCart() {
 
       {/* Cart Items */}
       {groupedCartItems.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-12 text-center">
           <div className="text-6xl mb-4">🛒</div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">Your cart is empty</h3>
           <p className="text-gray-600">Add some delicious items from our menu to get started!</p>
@@ -125,9 +125,9 @@ function CustomerCart() {
       ) : (
         <div className="space-y-4">
           {groupedCartItems.map((item) => (
-            <div key={item.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
+            <div key={item.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center space-x-3 sm:space-x-4">
                   <div className="text-4xl">{item.emoji}</div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
@@ -136,7 +136,7 @@ function CustomerCart() {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center justify-between sm:justify-end gap-4 sm:space-x-4">
                   <div className="flex items-center space-x-3">
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -226,7 +226,7 @@ function CustomerCart() {
                 <img
                   src={qrCodeUrl}
                   alt={`Payment QR for $${finalPayableAmount.toFixed(2)}`}
-                  className="h-44 w-44 rounded-lg border border-gray-300 bg-white p-2"
+                  className="h-36 w-36 sm:h-44 sm:w-44 rounded-lg border border-gray-300 bg-white p-2"
                 />
                 <p className="mt-3 text-sm font-medium text-gray-800">Pay ${finalPayableAmount.toFixed(2)}</p>
               </div>
