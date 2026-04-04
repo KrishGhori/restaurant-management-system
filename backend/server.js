@@ -94,12 +94,14 @@ const startServer = async () => {
     await connectWithRetry();
 
     app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
+
   } catch (error) {
-    console.error('Server startup aborted. Database connection could not be established.');
+    console.error('DB connection failed:', error.message);
     process.exit(1);
   }
+
 };
 
 if (process.env.VERCEL) {
