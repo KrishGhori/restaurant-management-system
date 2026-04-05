@@ -168,9 +168,9 @@ function StaffDashboard() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Staff Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Staff Dashboard</h1>
           <p className="mt-1 text-sm text-gray-500">
             Welcome back! Here's your shift overview and tasks.
           </p>
@@ -202,13 +202,13 @@ function StaffDashboard() {
         ))}
       </div>
 
-      <div className="card-shadow p-6">
+      <div className="card-shadow p-4 sm:p-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h3 className="text-lg font-semibold text-gray-900">My Availability Status</h3>
             <p className="text-sm text-gray-500">Admin uses this status to assign incoming customer orders.</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {["Available", "Busy", "Offline"].map((status) => (
               <button
                 key={status}
@@ -305,7 +305,7 @@ function StaffDashboard() {
           {activeOrders.length > 0 ? (
             <div className="space-y-4">
               {activeOrders.slice(0, 5).map((order) => (
-                <div key={order._id || order.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div key={order._id || order.id} className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center space-x-4">
                     <div className={`w-3 h-3 rounded-full ${
                       order.status === 'Pending' ? 'bg-red-400' :
@@ -316,7 +316,7 @@ function StaffDashboard() {
                       <p className="text-sm text-gray-600">{order.customer} • Table {order.table}</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center flex-wrap gap-2 sm:gap-3">
                     <span className={`px-2 py-1 text-xs rounded-full ${
                       order.status === 'Pending' ? 'bg-red-100 text-red-800' :
                       order.status === 'Preparing' ? 'bg-yellow-100 text-yellow-800' :
@@ -350,9 +350,9 @@ function StaffDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="card-shadow p-6">
+      <div className="card-shadow p-4 sm:p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <button
             onClick={handleViewOrders}
             className="flex items-center justify-center px-4 py-3 bg-linear-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105"

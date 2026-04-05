@@ -241,7 +241,7 @@ function Orders() {
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Orders Management</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Orders Management</h1>
           <p className="mt-1 text-sm text-gray-500">
             Manage and track all customer orders
           </p>
@@ -255,7 +255,7 @@ function Orders() {
       </div>
 
       {/* Filters and Search */}
-      <div className="card-shadow p-6">
+      <div className="card-shadow p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           {/* Status Filters */}
           <div className="flex flex-wrap gap-2">
@@ -298,7 +298,7 @@ function Orders() {
       </div>
 
       {/* Staff Status Overview */}
-      <div className="card-shadow p-6">
+      <div className="card-shadow p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">Staff Status</h2>
@@ -355,7 +355,7 @@ function Orders() {
       </div>
 
       {/* Staff Notifications */}
-      <div className="card-shadow p-6 border-l-4 border-l-indigo-500">
+      <div className="card-shadow p-4 sm:p-6 border-l-4 border-l-indigo-500">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">Staff Notifications</h2>
@@ -460,7 +460,7 @@ function Orders() {
                         {order.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td className="px-6 py-4 text-sm font-medium">
                       {isOrderActive(order.status) && (
                         <div className="flex flex-wrap items-center gap-2">
                           {order.staffAssigned ? (
@@ -511,7 +511,7 @@ function Orders() {
                                 [order._id || order.id]: e.target.value,
                               }))
                             }
-                            className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+                            className="border border-gray-300 rounded-md px-2 py-1 text-sm w-full sm:w-auto"
                           >
                             <option value="">Select Staff</option>
                             {staffMembers

@@ -66,9 +66,9 @@ function Dashboard() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="mt-1 text-sm text-gray-500">
             Welcome back! Here's what's happening with your restaurant today.
           </p>
@@ -84,7 +84,7 @@ function Dashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
         {stats.map((stat, index) => (
           <div key={index} className="card-shadow p-6">
             <div className="flex items-center">
@@ -101,7 +101,7 @@ function Dashboard() {
       </div>
 
       {/* Additional Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {/* Average Order Value */}
         <div className="card-shadow p-6">
           <div className="flex items-center justify-between">
@@ -109,7 +109,7 @@ function Dashboard() {
               <p className="text-sm font-medium text-gray-600">Average Order Value</p>
               <p className="text-2xl font-bold text-gray-900">₹{averageOrderValue}</p>
             </div>
-            <div className="h-12 w-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
+            <div className="h-12 w-12 bg-linear-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
               <span className="text-white text-lg">📈</span>
             </div>
           </div>
@@ -122,7 +122,7 @@ function Dashboard() {
               <p className="text-sm font-medium text-gray-600">Menu Items</p>
               <p className="text-2xl font-bold text-gray-900">{menuItems.length}</p>
             </div>
-            <div className="h-12 w-12 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg flex items-center justify-center">
+            <div className="h-12 w-12 bg-linear-to-r from-pink-500 to-rose-500 rounded-lg flex items-center justify-center">
               <span className="text-white text-lg">🍽️</span>
             </div>
           </div>
@@ -137,7 +137,7 @@ function Dashboard() {
                 {completedOrders > 0 ? 'Excellent' : 'Getting Started'}
               </p>
             </div>
-            <div className="h-12 w-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
+            <div className="h-12 w-12 bg-linear-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
               <span className="text-white text-lg">⭐</span>
             </div>
           </div>
@@ -159,18 +159,18 @@ function Dashboard() {
               const table = order.tableNumber || order.table || "N/A";
 
               return (
-              <div key={order._id || order.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
+              <div key={order._id || order.id} className="px-4 sm:px-6 py-4 hover:bg-gray-50 transition-colors">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center space-x-3 min-w-0">
                     <div className={`w-3 h-3 rounded-full ${
                       ["Completed", "Delivered"].includes(order.status) ? 'bg-green-400' :
                       ["Preparing", "Confirmed", "Ready"].includes(order.status) ? 'bg-yellow-400' : 'bg-red-400'
                     }`}></div>
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-sm font-medium text-gray-900">
                         Order #{orderId}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 truncate">
                         {customerName} • Table {table}
                       </p>
                     </div>
@@ -199,18 +199,18 @@ function Dashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="card-shadow p-6">
+      <div className="card-shadow p-4 sm:p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          <button className="flex items-center justify-center px-4 py-3 bg-linear-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105">
             <span className="mr-2">➕</span>
             Add Menu Item
           </button>
-          <button className="flex items-center justify-center px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105">
+          <button className="flex items-center justify-center px-4 py-3 bg-linear-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105">
             <span className="mr-2">📋</span>
             View All Orders
           </button>
-          <button className="flex items-center justify-center px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105">
+          <button className="flex items-center justify-center px-4 py-3 bg-linear-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105">
             <span className="mr-2">💰</span>
             Generate Report
           </button>

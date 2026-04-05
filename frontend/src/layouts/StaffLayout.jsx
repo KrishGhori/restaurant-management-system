@@ -27,7 +27,7 @@ function StaffLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,7 +79,7 @@ function StaffLayout() {
         </div>
       </header>
 
-      <div className="flex">
+      <div className="flex min-w-0">
         {/* Sidebar */}
         <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0`}>
           <div className="flex flex-col h-full pt-16 md:pt-0">
@@ -140,7 +140,7 @@ function StaffLayout() {
         )}
 
         {/* Main Content */}
-        <main className="flex-1 md:ml-0">
+        <main className="flex-1 min-w-0 md:ml-0">
           <div className="p-3 sm:p-4 lg:p-6">
             <Outlet />
           </div>

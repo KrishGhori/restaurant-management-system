@@ -78,7 +78,7 @@ function StaffProfile() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Staff Profile</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Staff Profile</h1>
         <p className="text-gray-600 mt-1">Manage your personal details and account information.</p>
       </div>
 
@@ -95,17 +95,17 @@ function StaffProfile() {
           </div>
 
           <div className="mt-6 space-y-3 text-sm">
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
               <span className="text-gray-500">Role</span>
-              <span className="text-gray-900 font-medium capitalize">{user?.role || "staff"}</span>
+              <span className="text-gray-900 font-medium capitalize sm:text-right">{user?.role || "staff"}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
               <span className="text-gray-500">Email</span>
-              <span className="text-gray-900 font-medium">{formData.email || "Not set"}</span>
+              <span className="text-gray-900 font-medium break-all sm:text-right">{formData.email || "Not set"}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
               <span className="text-gray-500">Phone</span>
-              <span className="text-gray-900 font-medium">{formData.phone || "Not set"}</span>
+              <span className="text-gray-900 font-medium sm:text-right">{formData.phone || "Not set"}</span>
             </div>
           </div>
         </div>

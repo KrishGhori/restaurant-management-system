@@ -41,7 +41,7 @@ function CustomerLayout() {
   });
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-orange-50 via-red-50 to-yellow-100">
+    <div className="min-h-screen bg-linear-to-br from-orange-50 via-red-50 to-yellow-100 overflow-x-hidden">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,14 +68,14 @@ function CustomerLayout() {
             </div>
 
             {/* User Menu & Cart */}
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              <div className="hidden md:flex items-center space-x-2">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <div className="hidden lg:flex items-center gap-2 min-w-0 max-w-40">
                 <div className="h-8 w-8 bg-orange-100 rounded-full flex items-center justify-center">
                   <span className="text-sm font-medium text-orange-600">
                     {localStorage.getItem("username")?.charAt(0).toUpperCase() || "C"}
                   </span>
                 </div>
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-gray-700 truncate">
                   {localStorage.getItem("username") || "Customer"}
                 </span>
               </div>
@@ -84,14 +84,21 @@ function CustomerLayout() {
               <div className="relative">
                 <NavLink
                   to="/customer/cart"
-                  className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className={({ isActive }) =>
+                    `inline-flex h-10 w-10 items-center justify-center rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                      isActive
+                        ? 'border-orange-200 bg-orange-50 text-orange-600'
+                        : 'border-gray-200 bg-white text-gray-500 hover:text-orange-600 hover:border-orange-200 hover:bg-orange-50'
+                    }`
+                  }
+                  aria-label="Open cart"
                 >
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5H19M7 13l-1.1 5M7 13l1.1-5m8.9 5L17 18" />
                   </svg>
                 </NavLink>
                 {myOrders.filter(order => order.status !== "Completed").length > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 h-5 min-w-5 px-1 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                     {myOrders.filter(order => order.status !== "Completed").length}
                   </span>
                 )}
@@ -111,7 +118,7 @@ function CustomerLayout() {
         </div>
       </header>
 
-      <div className="flex">
+      <div className="flex min-w-0">
         {/* Sidebar */}
         <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0`}>
           <div className="flex flex-col h-full pt-16 md:pt-0">
@@ -172,7 +179,7 @@ function CustomerLayout() {
         )}
 
         {/* Main Content */}
-        <main className="flex-1 md:ml-0">
+        <main className="flex-1 min-w-0 md:ml-0">
           <div className="p-3 sm:p-4 lg:p-6">
             <Outlet />
           </div>

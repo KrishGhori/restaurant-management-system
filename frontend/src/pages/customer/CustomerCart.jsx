@@ -99,7 +99,7 @@ function CustomerCart() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Shopping Cart</h1>
           <p className="text-gray-600 mt-1">Review your items before placing the order</p>
         </div>
         {groupedCartItems.length > 0 && (
@@ -263,7 +263,7 @@ function CustomerCart() {
           <p className="text-gray-600 mb-4">
             Based on your current order, you might also like:
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
             <div className="bg-white rounded-lg p-4 border border-gray-200">
               <div className="text-3xl mb-2">🥤</div>
               <h4 className="font-medium text-gray-900">Fresh Juice</h4>

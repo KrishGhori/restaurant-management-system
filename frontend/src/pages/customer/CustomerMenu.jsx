@@ -116,10 +116,10 @@ function CustomerMenu() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Our Menu</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Our Menu</h1>
           <p className="text-gray-600 mt-1">Discover delicious dishes crafted with care</p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-start">
           <span className="text-sm text-gray-600">Cart:</span>
           <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
             {cart.reduce((sum, item) => sum + item.quantity, 0)} items
@@ -134,7 +134,7 @@ function CustomerMenu() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row gap-4">
           {/* Search */}
           <div className="flex-1">
@@ -170,27 +170,27 @@ function CustomerMenu() {
       </div>
 
       {/* Menu Items Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {filteredItems.map((item) => (
           <div key={item.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
             <div className="aspect-w-16 aspect-h-9 bg-gray-200">
               <img
                 src={getItemImage(item)}
                 alt={item.name}
-                className="w-full h-48 object-cover"
+                className="w-full h-44 sm:h-48 object-cover"
                 loading="lazy"
                 onError={(e) => {
                   e.currentTarget.src = `https://source.unsplash.com/900x700/?${encodeURIComponent(item.name || "food")}`;
                 }}
               />
             </div>
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-2">
+            <div className="p-4 sm:p-6">
+              <div className="flex justify-between items-start mb-2 gap-3">
                 <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
                 <span className="text-lg font-bold text-orange-600">${item.price}</span>
               </div>
               <p className="text-gray-600 text-sm mb-4">{item.description}</p>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                   {item.category}
                 </span>
@@ -234,9 +234,9 @@ function CustomerMenu() {
 
       {/* Cart Summary */}
       {cart.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky bottom-0">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 sticky bottom-2 sm:bottom-4">
           <div className="space-y-4">
-            <div className="flex justify-between items-start gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">Order Summary</h3>
                 <p className="text-gray-600">
@@ -252,11 +252,11 @@ function CustomerMenu() {
               </div>
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-stretch sm:justify-end w-full">
               <button
                 onClick={placeOrder}
                 disabled={isPlacingOrder}
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+                className="inline-flex items-center justify-center w-full sm:w-auto px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
               >
                 {isPlacingOrder ? "Placing..." : "Place Order"}
               </button>

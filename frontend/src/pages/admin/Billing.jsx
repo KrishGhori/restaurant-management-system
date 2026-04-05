@@ -173,10 +173,10 @@ function Billing() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-amber-50 via-white to-orange-50 p-4 md:p-8">
+    <div className="min-h-screen bg-linear-to-br from-amber-50 via-white to-orange-50 p-3 sm:p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="rounded-2xl bg-white/80 backdrop-blur border border-amber-100 p-6 shadow-sm">
-          <h1 className="text-3xl font-bold text-gray-900">Billing Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Billing Dashboard</h1>
           <p className="text-gray-600 mt-1">Generate bills and track completed order revenue.</p>
         </div>
 
@@ -204,7 +204,7 @@ function Billing() {
             <div className="p-10 text-center text-gray-500">No completed orders yet.</div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-160">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="text-left px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wide">Order</th>
@@ -249,7 +249,7 @@ function Billing() {
 
         {selectedOrder && (
           <div className="rounded-2xl border border-amber-200 bg-white shadow-sm p-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <h3 className="text-xl font-bold text-gray-900">Bill Summary</h3>
               <span className="text-sm text-gray-500">GST Rate: 5%</span>
             </div>
@@ -280,7 +280,7 @@ function Billing() {
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex justify-start sm:justify-end">
               <button
                 onClick={() => downloadBillPdf(selectedOrder, selectedBilling)}
                 className="inline-flex items-center px-4 py-2 rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-black transition"

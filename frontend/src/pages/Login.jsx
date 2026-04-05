@@ -65,7 +65,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-start sm:items-center justify-center px-3 py-6 sm:p-4 relative overflow-hidden">
 
       {/* Background Shapes */}
       <div className="absolute inset-0 opacity-5">
@@ -75,25 +75,25 @@ function Login() {
         <div className="absolute bottom-20 right-20 w-16 h-16 bg-orange-500 rounded-full"></div>
       </div>
 
-      <div className="max-w-md w-full space-y-6 sm:space-y-8 relative z-10">
+      <div className="max-w-md w-full space-y-5 sm:space-y-8 relative z-10">
 
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-20 w-20 bg-linear-to-r from-orange-500 via-red-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-            <span className="text-3xl">🍽️</span>
+          <div className="mx-auto h-16 w-16 sm:h-20 sm:w-20 bg-linear-to-r from-orange-500 via-red-500 to-pink-500 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+            <span className="text-2xl sm:text-3xl">🍽️</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             Restaurant<span className="text-orange-600">Pro</span>
           </h1>
 
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-sm sm:text-lg">
             Professional Restaurant Management System
           </p>
         </div>
 
         {/* Login Card */}
-        <div className="card-shadow p-5 sm:p-8">
+        <div className="card-shadow p-4 sm:p-8">
           <form onSubmit={handleLogin} className="space-y-6">
 
             {/* Role Selection */}

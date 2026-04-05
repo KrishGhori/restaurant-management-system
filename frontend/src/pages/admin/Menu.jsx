@@ -164,7 +164,7 @@ function Menu() {
 
   return (
     <div className="space-y-4">
-      <h1>Menu Management</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Menu Management</h1>
 
       {menuError && (
         <p style={{ color: "#dc3545", marginTop: "12px" }}>{menuError}</p>
@@ -259,7 +259,7 @@ function Menu() {
       <table
         style={{
           width: "100%",
-          minWidth: "920px",
+          minWidth: "680px",
           marginTop: "20px",
           borderCollapse: "collapse",
         }}
@@ -382,20 +382,19 @@ function Menu() {
       {editingId === item.id ? (
         <button onClick={() => saveEdit(item.id)} disabled={isSubmitting}>Save</button>
       ) : (
-        <>
-<button onClick={() => startEdit(item)} style={editBtn}>
-  Edit
-</button>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "center" }}>
+          <button onClick={() => startEdit(item)} style={editBtn}>
+            Edit
+          </button>
 
-<button
-  onClick={() => deleteItem(item.id)}
-  style={deleteBtn}
-  disabled={isSubmitting}
->
-  Delete
-</button>
-
-        </>
+          <button
+            onClick={() => deleteItem(item.id)}
+            style={deleteBtn}
+            disabled={isSubmitting}
+          >
+            Delete
+          </button>
+        </div>
       )}
     </td>
   </tr>
@@ -432,6 +431,8 @@ const cellStyle = {
   border: "1px solid #ddd",
   padding: "10px",
   textAlign: "center",
+  whiteSpace: "normal",
+  wordBreak: "break-word",
 };
 
 const inputStyle = {

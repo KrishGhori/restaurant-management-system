@@ -139,7 +139,7 @@ function CustomerOrders() {
   return (
     <div className="space-y-6">
       {toast && (
-        <div className="fixed top-4 right-4 z-50">
+        <div className="fixed top-3 left-3 right-3 sm:top-4 sm:left-auto sm:right-4 z-50">
           <div
             className={`rounded-md px-4 py-3 text-sm font-medium shadow-lg ${
               toast.type === "error"
@@ -153,7 +153,7 @@ function CustomerOrders() {
       )}
 
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My Orders</h1>
         <p className="text-gray-600 mt-1">Track your order history and status</p>
       </div>
 
@@ -249,7 +249,7 @@ function CustomerOrders() {
 
                 {order.status === "Delivered" && order.paymentStatus !== "Paid" && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-3">
                       <div>
                         <p className="text-sm font-semibold text-gray-900">Payment Available</p>
                         <p className="text-xs text-gray-600">Only Online Payment is available after delivery.</p>
@@ -287,7 +287,7 @@ function CustomerOrders() {
                 )}
 
                 {order.status === "Delivered" && order.paymentStatus === "Paid" && (
-                  <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
+                  <div className="mt-4 pt-4 border-t border-gray-200 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <span className="text-sm text-gray-700">Payment Method: {order.paymentMethod || "UPI"}</span>
                     <span className="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
                       Paid
@@ -323,7 +323,7 @@ function CustomerOrders() {
       )}
 
       {myOrders.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
