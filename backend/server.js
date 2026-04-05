@@ -36,15 +36,19 @@ app.get('/api/health', (req, res) => {
 });
 
 // Keep API reachable when DB is down and return explicit 503 for DB-dependent routes.
-app.use('/api', (req, res, next) => {
+app.use('/api', async (req, res, next) => {
   if (req.path === '/health') {
     return next();
   }
 
   if (mongoose.connection.readyState !== 1) {
-    return res.status(503).json({
-      message: 'Database not connected. Please retry in a few seconds.'
-    });
+    try {
+      await connectDB();
+    } catch (error) {
+      return res.status(503).json({
+        message: 'Database not connected. Please retry in a few seconds.'
+      });
+    }
   }
 
   next();
@@ -105,9 +109,8 @@ const startServer = async () => {
 };
 
 if (process.env.VERCEL) {
-  connectDB().catch((error) => {
-    console.error('Database connection error in Vercel environment:', error.message);
-  });
+  // On Vercel serverless, requests may hit cold instances before startup hooks finish.
+  // The /api middleware above ensures a connection attempt per request when needed.
 } else {
   startServer();
 }

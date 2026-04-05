@@ -1,6 +1,16 @@
 import mongoose from 'mongoose';
 
+let connectionPromise = null;
+
 export const connectDB = async () => {
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
+  }
+
+  if (mongoose.connection.readyState === 2 && connectionPromise) {
+    return connectionPromise;
+  }
+
   const mongoURI = process.env.MONGODB_URI;
 
   if (!mongoURI) {
@@ -10,12 +20,19 @@ export const connectDB = async () => {
   const redactedUri = mongoURI.replace(/:\/\/([^:]+):([^@]+)@/, '://$1:***@');
   console.log('Using MongoDB URI:', redactedUri);
 
-  await mongoose.connect(mongoURI, {
+  connectionPromise = mongoose.connect(mongoURI, {
     dbName: 'restaurant-management',
     serverSelectionTimeoutMS: 10000,
     family: 4
   });
 
-  console.log('MongoDB connected successfully');
+  try {
+    await connectionPromise;
+    console.log('MongoDB connected successfully');
+    return mongoose.connection;
+  } catch (error) {
+    connectionPromise = null;
+    throw error;
+  }
 };
 export default connectDB;
