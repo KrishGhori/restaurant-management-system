@@ -211,12 +211,12 @@ function Login() {
             {/* Register Link */}
             <div className="text-center">
               <p className="text-gray-600">
-                Don't have an account?{" "}
+                Don't have a customer account?{" "}
                 <Link
                   to="/register"
                   className="text-orange-600 hover:text-orange-700 font-semibold"
                 >
-                  Create one here
+                  Register as Customer
                 </Link>
               </p>
             </div>

@@ -8,7 +8,6 @@ function Register() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "customer",
     firstName: "",
     lastName: "",
     phone: "",
@@ -85,6 +84,7 @@ function Register() {
 
     try {
       const { confirmPassword, ...userData } = formData;
+      userData.role = "customer";
 
       const response = await api.register(userData);
 
@@ -148,52 +148,8 @@ function Register() {
               </div>
             )}
 
-            {/* Role Selection */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Select Your Role
-              </label>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setFormData(prev => ({ ...prev, role: "admin" }))}
-                  className={`p-3 sm:p-4 border-2 rounded-xl transition ${
-                    formData.role === "admin"
-                      ? "border-orange-500 bg-orange-50 text-orange-700"
-                      : "border-gray-200 text-gray-600"
-                  }`}
-                >
-                  <div className="text-2xl mb-1">👑</div>
-                  <div className="font-medium">Admin</div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setFormData(prev => ({ ...prev, role: "staff" }))}
-                  className={`p-3 sm:p-4 border-2 rounded-xl transition ${
-                    formData.role === "staff"
-                      ? "border-orange-500 bg-orange-50 text-orange-700"
-                      : "border-gray-200 text-gray-600"
-                  }`}
-                >
-                  <div className="text-2xl mb-1">👨‍🍳</div>
-                  <div className="font-medium">Staff</div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setFormData(prev => ({ ...prev, role: "customer" }))}
-                  className={`p-3 sm:p-4 border-2 rounded-xl transition ${
-                    formData.role === "customer"
-                      ? "border-orange-500 bg-orange-50 text-orange-700"
-                      : "border-gray-200 text-gray-600"
-                  }`}
-                >
-                  <div className="text-2xl mb-1">👤</div>
-                  <div className="font-medium">Customer</div>
-                </button>
-              </div>
+            <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg text-sm">
+              New registration is available for customers only. Admin and staff accounts are created by administrator.
             </div>
 
             {/* Name Fields */}
